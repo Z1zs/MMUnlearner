@@ -34,7 +34,7 @@ Our codes are borrowed from [Liu](https://github.com/franciscoliu)'s baselines i
 
 This repository contains the **official implementation** of the following paper:
 
-> **MMNeuron: Discovering Neuron-Level Domain-Specific Interpretation in Multimodal Large Language Model** https://arxiv.org/abs/2502.11051
+> **MMUnlearner: Reformulating Multimodal Machine Unlearning in the Era of Multimodal Large Language Models** https://arxiv.org/abs/2502.11051
 >
 > **Abstract:** _Recent progress in Machine Unlearning (MU) has introduced solutions for the selective removal of private or sensitive information encoded within deep neural networks. Nonetheless, MU for Multimodal Large Language Models (MLLMs) remains in its nascent phase. Therefore, we propose to reformulate the task of multimodal MU in the era of MLLMs, which aims to erase only the visual patterns associated with a given entity while preserving the corresponding textual knowledge encoded within the original parameters of the language model backbone. Furthermore, we develop a novel geometry-constrained gradient ascent method MMUnlearner. It updates the weights of MLLMs with a weight saliency map jointly restricted by the remaining concepts and textual knowledge during unlearning, thereby preserving parameters essential for non-target knowledge. Extensive experiments demonstrate that MMUnlearner surpasses baselines that finetuning MLLMs with VQA data directly through Gradient Ascent (GA) or Negative Preference Optimization (NPO), across all evaluation dimensions. Our code will be released upon acceptance._
 
