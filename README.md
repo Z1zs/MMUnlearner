@@ -149,7 +149,7 @@ For CLEAR:
 ```bash
 python CLEAR_manifold.py --model_id path_to_original_model --forget_split_ratio 05 --save_dir path_to_save_dir --batch_size 4 --lr 1e-5 --num_epochs 1 --grad_mask_path "path_to/clear_language_mask.pt" --ans_only True
 ```
-grad_mask_path: Specifies the generated gradient mask, indicating which module(s) to update. Optional: language_mask.pt, vision_mask.pt, both_mask.pt.  
+`grad_mask_path`: Specifies the generated gradient mask, indicating which module(s) to update. Optional: language_mask.pt, vision_mask.pt, both_mask.pt.  
   
 ## Evaluation  
 To evaluate the models, use the following commands:  
