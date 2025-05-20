@@ -1,5 +1,5 @@
 
-# [ACL 2025 Findings]MMUnlearner: Reformulating Multimodal Machine Unlearning in the Era of Multimodal Large Language Models
+# [ACL'25 Findings]MMUnlearner: Reformulating Multimodal Machine Unlearning in the Era of Multimodal Large Language Models
   
 <div>
 <div align="center">
@@ -34,7 +34,7 @@ Our codes are borrowed from [Liu](https://github.com/franciscoliu)'s baselines i
 
 This repository contains the **official implementation** of the following paper:
 
-> **MMNeuron: Discovering Neuron-Level Domain-Specific Interpretation in Multimodal Large Language Model** https://arxiv.org/abs/2406.11193
+> **MMNeuron: Discovering Neuron-Level Domain-Specific Interpretation in Multimodal Large Language Model** https://arxiv.org/abs/2502.11051
 >
 > **Abstract:** _Recent progress in Machine Unlearning (MU) has introduced solutions for the selective removal of private or sensitive information encoded within deep neural networks. Nonetheless, MU for Multimodal Large Language Models (MLLMs) remains in its nascent phase. Therefore, we propose to reformulate the task of multimodal MU in the era of MLLMs, which aims to erase only the visual patterns associated with a given entity while preserving the corresponding textual knowledge encoded within the original parameters of the language model backbone. Furthermore, we develop a novel geometry-constrained gradient ascent method MMUnlearner. It updates the weights of MLLMs with a weight saliency map jointly restricted by the remaining concepts and textual knowledge during unlearning, thereby preserving parameters essential for non-target knowledge. Extensive experiments demonstrate that MMUnlearner surpasses baselines that finetuning MLLMs with VQA data directly through Gradient Ascent (GA) or Negative Preference Optimization (NPO), across all evaluation dimensions. Our code will be released upon acceptance._
 
@@ -84,9 +84,9 @@ For CLEAR:
 ```bash
 python CLEAR_GA.py --model_id path_to_original_model --vanilla_dir path_to_vanilla_model --data_folder data/CLEAR --forget_split_ratio 05 --save_dir path_to_save_dir --batch_size 4 --lr 1e-5 --num_epochs 1 --ans_only True
 ```
-ans_only: When True, the loss is only calculated on answer tokens; otherwise, it will be calculated on all the text tokens.  
+`ans_only`: When True, the loss is only calculated on answer tokens; otherwise, it will be calculated on all the text tokens.  
   
-### GA_Diff (Gradient-based Difference Approach)  
+### GA_Diff
 To run the GA_Diff baseline:  
   
 For MLLMU-Bench:  
@@ -108,7 +108,7 @@ For CLEAR:
 ```bash
 python CLEAR_KL_Min.py --model_id path_to_original_model --vanilla_dir path_to_vanilla_model --data_folder data/CLEAR --forget_split_ratio 05 --save_dir path_to_save_dir --batch_size 4 --lr 1e-5 --num_epochs 1 --ans_only True
 ```
-### NPO (Neural Progressive Optimization)  
+### NPO
 First, get the reference model:  
   
 For MLLMU-Bench:  
@@ -162,8 +162,8 @@ For CLEAR:
 ```bash
 bash CLEAR_eval.sh forget_ratio 100-forget_ratio "path_to_evaluated_model" "path_to_original_model" gpu_id1 gpu_id2 gpu_id3 gpu_id4
 ```
-gpu_id: Specify the GPU to use (0-7).  
-forget_ratio: Specify the forget ratio (e.g., 05 or 5).  
-shot_num: Choose between zero_shot or few_shot. For details, see MLLMU-Bench GitHub Issue.  
+`gpu_id`: Specify the GPU to use (0-7).  
+`forget_ratio`: Specify the forget ratio (e.g., 05 or 5).  
+`shot_num`: Choose between "zero_shot" or "few_shot". For details, see MLLMU-Bench [Issue](https://github.com/franciscoliu/MLLMU-Bench/issues/2).  
 
 
