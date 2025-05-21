@@ -61,7 +61,7 @@ Then, move them to the following directories:
 
 ## Getting Vanilla Model  
   
-To fine-tune the vanilla models, use the following commands:  
+To obtain the vanilla models, use the following commands:  
   
 For MLLMU-Bench:  
   
