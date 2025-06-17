@@ -26,7 +26,7 @@ Our codes are borrowed from [Liu](https://github.com/franciscoliu)'s baselines i
 
 ## Updates
 
-- **16 Feb, 2025** :Paper published in Arxiv.
+- **16 Feb, 2025** : Paper published in Arxiv.
 - **16 May, 2025** : Paper accepted by ACL 2025 as Findings.
 - **21 May, 2025** : Code published.
 
