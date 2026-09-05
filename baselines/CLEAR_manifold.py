@@ -111,8 +111,9 @@ def main(args):
         raise ValueError("Model ID not recognized or not supported. Please provide a valid model ID.")
 
         
+    module_set=set()
+    grad_mask=None
     if args.grad_mask_path:
-        module_set=set()
         grad_data=torch.load(args.grad_mask_path)
         grad_mask=grad_data['weight']
         layer_name_list=list(grad_mask.keys())

@@ -3,7 +3,6 @@ import os
 import pandas as pd
 from torch.utils.data import DataLoader, random_split
 from tqdm import tqdm
-from peft import PeftModel
 sys.path.append(('.'))
 sys.path.append(('../'))
 sys.path.append(('../../'))
@@ -14,30 +13,11 @@ import argparse
 import torch
 from transformers import LlavaForConditionalGeneration, AutoProcessor, get_scheduler, AdamW, MllamaForConditionalGeneration, AutoTokenizer,Qwen2VLForConditionalGeneration
 from qwen_vl_utils import process_vision_info
-from peft import LoraConfig, prepare_model_for_kbit_training, get_peft_model
 from data_process.data_preprocess import LLAVA_multimodal_Dataset, train_collate_fn_mllmu, train_collate_mllmu_ansonly,Vanilla_LLaVA_Dataset
 from data_process.CLEAR_process import CLEAR_Dataset, CAPTION_MODE, RECOGNITION_MODE, train_collate_clear, NONE_MODE,train_collate_clear_ansonly
 from data_process.MLLMU_process import train_collate_fn_llava_new
 from accelerate import Accelerator
 import torch
-
-def find_all_linear_names(model):
-    print(model)
-    cls = torch.nn.Linear
-    lora_module_names = set()
-    multimodal_keywords = ["embeddings","embed_tokens","patch_embed"]
-    for name, module in model.named_modules():
-        if any(mm_keyword in name for mm_keyword in multimodal_keywords):
-            continue
-        if isinstance(module, cls):
-            names = name.split('.')
-            lora_module_names.add(names[0] if len(names) == 1 else ".".join(names[-2:]))
-
-    if 'lm_head' in lora_module_names:  # needed for 16-bit
-        lora_module_names.remove('lm_head')
-    # if "qwen" in str(model).lower():
-    #     lora_module_names.remove('proj')
-    return list(lora_module_names)
 
 # Example usage:
 def load_model_and_processor(args):
@@ -55,18 +35,6 @@ def load_model_and_processor(args):
             low_cpu_mem_usage=True,
             local_files_only=True,
         )
-        print("getting peft model")
-        lora_config = LoraConfig(
-            r=16, #32
-            lora_alpha=16, #8
-            lora_dropout=0.05,
-            # target_modules=["q_proj", "v_proj"],
-            target_modules=find_all_linear_names(model),
-            init_lora_weights="gaussian",
-        )
-        model = prepare_model_for_kbit_training(model)
-        model = get_peft_model(model, lora_config)
-        model.print_trainable_parameters()
         processor = AutoProcessor.from_pretrained(args.model_id)
         processor.tokenizer.padding_side = "right"  # Ensure right padding
         processor.tokenizer.add_tokens(["<image>", "<pad>"], special_tokens=True)
@@ -114,11 +82,6 @@ def main(args):
         print("WARNING: Resizing the embedding matrix to match the tokenizer vocab size.")
         model.resize_token_embeddings(len(tokenizer))
     
-    if isinstance(model, PeftModel):
-        print("This is a PEFT model.")
-    else:
-        print("This is NOT a PEFT model.")
-
     # Dataset and Dataloader setup
 
     forget_folder = os.path.join(args.data_split_dir, f"forget_{args.forget_split_ratio}")
@@ -155,8 +118,9 @@ def main(args):
         )
     else:
         raise ValueError("Model ID not recognized or not supported. Please provide a valid model ID.")
+    module_set=set()
+    grad_mask=None
     if args.grad_mask_path:
-        module_set=set()
         grad_data=torch.load(args.grad_mask_path)
         grad_mask=grad_data['weight']
         layer_name_list=list(grad_mask.keys())
@@ -274,8 +238,6 @@ def main(args):
     # Save the final model
     accelerator.wait_for_everyone()
     unwrapped_model = accelerator.unwrap_model(model)
-    if isinstance(model, PeftModel):
-        unwrapped_model = unwrapped_model.merge_and_unload()
     unwrapped_model.save_pretrained(args.save_dir)
     print(f"Model saved to: {args.save_dir}")
 
